@@ -1,0 +1,153 @@
+<ui>
+	<!-- ScoreTimer -->
+	<block className="ScoreTimer">
+		<bind name="instance" value="'ScoreTimerView'; { }" />
+	</block>
+	
+	<block className="ScoreTimerView">
+		<style>
+			<position value="absolute" />
+		</style>
+	
+		<!--<bind name="controller" value="su.laf.wows.ScoreTimerUbController" />-->
+		
+		<bind name="watch" value="'allyCounterColor'; (resultPrediction &gt;= 2) &amp;&amp; (resultPrediction &lt;= 3) ? '0xFF66FFC1' : '0xFFFFFFFF'" />
+		<bind name="watch" value="'enemyCounterColor'; (resultPrediction &gt;= 4) &amp;&amp; (resultPrediction &lt;= 5) ? '0xFFFF3300' : '0xFFFFFFFF'" />
+		
+		<bind name="watch" value="'allyCounterPoint'; (resultPrediction &gt;= 2) &amp;&amp; (resultPrediction &lt;= 3) ? 'filled' : 'empty'" />
+		<bind name="watch" value="'enemyCounterPoint'; (resultPrediction &gt;= 4) &amp;&amp; (resultPrediction &lt;= 5) ? 'filled' : 'empty'" />
+
+		<bind name="collectionDH" value="CC.userPrefs; 'userPrefsCollection'" />
+		<bind name="entityDH" value="'userPrefsEntity'; userPrefsCollection[0].id" />
+		<bind name="watchDH" value="'userPrefs'; ['userPrefsEntity.userPrefs.evUserPrefsChanged']; userPrefsEntity.userPrefs.userPrefs" />
+		
+		<bind name="firstEntityDH" value="'stageEntity'; CC.stage" />
+		<bind name="watchDH" value="'stage'; ['stageEntity.stage.evStageSizeChanged']; stageEntity.stage" />
+
+		<bind name="firstEntityDH" value="'battleDataEntity'; CC.battleData" />
+		<bind name="watchDH" value="'scoreTimerData'; ['battleDataEntity.data.evChanged']; battleDataEntity.data.data"/>
+		<!--
+		<bind name="firstEntityDH" value="'timerEntity'; CC.timer" />
+		<bind name="watchDH" value="'currentTime'; ['timerEntity.timer.evInfrequent']; timerEntity.timer.currentTime"/>
+		-->
+		<bind name="watch" value="'resultPrediction'; scoreTimerData.resultPrediction"/>
+		<bind name="watch" value="'enemyTimeToWin'; scoreTimerData.enemyTimeToWin"/>
+		<bind name="watch" value="'allyTimeToWin'; scoreTimerData.allyTimeToWin"/>
+		<!--
+		<bind name="watch" value="'enemyTimeToWin'; enemyEndTime - currentTime"/>
+		<bind name="watch" value="'allyTimeToWin'; allyEndTime - currentTime"/>
+		-->
+		<block className="ScoreTimerAlly">
+			<bind name="draggableWindow" value="'STAllyDragZone'; 'IMPosition'; 'ST2Ally'" />
+			<bind name="watch" value="'STAllyPositionX'; (userPrefs.IMPositionX.ST2Ally == null)  ? ((stage.width/2) - 84 - 110) : userPrefs.IMPositionX.ST2Ally" />
+	        <bind name="watch" value="'STAllyPositionY'; (userPrefs.IMPositionY.ST2Ally == null)  ? '50' :  userPrefs.IMPositionY.ST2Ally" />
+	        <bind name="left" value="STAllyPositionX" />
+	        <bind name="top" value="STAllyPositionY" />
+	        
+			<block>
+				<bind name="appear" value="'addedToStage'; 0.6; 0; {alpha: 0}; {alpha: 1}" />
+				<bind name="visible" value="true" />
+				<block className="contrast_panel" type="native">
+					<styleClass value="$FullsizeAbsolute" />
+					<style>
+						<marginTop value="-2px" />
+						<marginBottom value="-2px" />
+					</style>
+					<bind name="style" value="'alpha'; 0.4" />
+				</block>
+
+				<block>
+					<block>
+						<style>
+							<marginTop value="2px" />
+							<marginRight value="2px" />
+							<marginBottom value="2px" />
+							<marginLeft value="2px" />
+							
+							<width value="80px" />
+							<height value="26px" />
+						</style>
+						<bind name="style" value="'backgroundImage'; 'url:../../PnFMods/ScoreTimerPy/scoretimer_icons/point_ally_' + allyCounterPoint + '.png'" />
+						
+						<block type="text">
+							<style>
+								<textAlign value="left" />
+								<textColor value="0xFFFFFFFF" />
+								<fontSize value="20" />
+
+								<marginTop value="-2px" />
+								<marginLeft value="24px" />
+							</style>
+							<styleClass value="$TextDefaultBold" />
+							<bind name="style" value="'textColor'; allyCounterColor" />
+							<bind name="text" value="allyTimeToWin &lt; 6000 ? countdownFormat(allyTimeToWin, 0, true) : '--:--'" />
+						</block>
+					</block>
+					<params>
+						<param name="name" value="STAllyDragZone" />
+					</params>
+				</block>
+			</block>
+			<style>
+				<position value="absolute" />
+			</style>
+		</block>
+		
+		<block className="ScoreTimerEnemy">
+			<bind name="draggableWindow" value="'STEnemyDragZone'; 'IMPosition'; 'ST2Enemy'" />
+			<bind name="watch" value="'STEnemyPositionX'; (userPrefs.IMPositionX.ST2Enemy == null)  ? ((stage.width/2) + 110) : userPrefs.IMPositionX.ST2Enemy" />
+	        <bind name="watch" value="'STEnemyPositionY'; (userPrefs.IMPositionY.ST2Enemy == null)  ? '50' :  userPrefs.IMPositionY.ST2Enemy" />
+	        <bind name="left" value="STEnemyPositionX" />
+	        <bind name="top" value="STEnemyPositionY" />
+	        
+			<block>
+				<bind name="appear" value="'addedToStage'; 0.6; 0; {alpha: 0}; {alpha: 1}" />
+				<bind name="visible" value="true" />
+				<block className="contrast_panel" type="native">
+					<styleClass value="$FullsizeAbsolute" />
+					<style>
+						<marginTop value="-2px" />
+						<marginBottom value="-2px" />
+					</style>
+					<bind name="style" value="'alpha'; 0.4" />
+				</block>
+
+				<block>
+					<block>
+						<style>
+							<marginTop value="2px" />
+							<marginRight value="2px" />
+							<marginBottom value="2px" />
+							<marginLeft value="2px" />
+							
+							<width value="80px" />
+							<height value="26px" />
+						</style>
+						<bind name="style" value="'backgroundImage'; 'url:../../PnFMods/ScoreTimerPy/scoretimer_icons/point_enemy_' + enemyCounterPoint + '.png'" />
+						
+						<block type="text">
+							<style>
+								<textAlign value="left" />
+								<textColor value="0xFFFFFFFF" />
+								<fontSize value="20" />
+
+								<marginTop value="-2px" />
+								<marginLeft value="24px" />
+							</style>
+							<styleClass value="$TextDefaultBold" />
+							<bind name="style" value="'textColor'; enemyCounterColor" />
+							<bind name="text" value="enemyTimeToWin &lt; 6000 ? countdownFormat(enemyTimeToWin, 0, true) : '--:--'" />
+						</block>
+					</block>
+					<params>
+						<param name="name" value="STEnemyDragZone" />
+					</params>
+				</block>
+			</block>
+			<style>
+				<position value="absolute" />
+			</style>
+		</block>
+	</block>
+	<!-- end of ScoreTimer -->
+</ui>	
