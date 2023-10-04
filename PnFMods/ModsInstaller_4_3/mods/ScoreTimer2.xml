@@ -1,44 +1,17 @@
 <code>
-	<target_File file="gui/uss_settings.xml">
-		<!-- Insert code from <insert> in block <mods> w/o attrs-->
-		<root_Node>
-			<mods>
-				<insert>
-					<swffile>../unbound/mods/ScoreTimer.swf</swffile>
-					<attrs>
-						<do_if_not_exist tag="swffile" text="ScoreTimer.swf"/>
-					</attrs>
-				</insert>
-				<insert>
-					<xmlfile>../unbound/mods/ScoreTimer.xml</xmlfile>
-					<attrs>
-						<do_if_not_exist tag="xmlfile" text="ScoreTimer.xml"/>
-					</attrs>
-				</insert>
-			</mods>
-		</root_Node>
-	</target_File>
 	<target_File file="gui/battle_elements.xml">
 		<root_Node>
 			<find_Node tag="elementList">
 				<insert>
-					<element class="lesta.libs.unbound.UnboundElement" name="unboundScoreTimer" url="battle_stats.swf">
-						<properties hitTest="true" rootElementId="ScoreTimer"/>
+					<element class="lesta.unbound2.UbElement" elementName="ScoreTimer2" name="unbound2ScoreTimer2">
+						<properties hitTest="true"/>
 					</element>
 					<attrs>
-						<do_if_not_exist tag="element" type="name" name="unboundScoreTimer"/>
+						<do_if_not_exist tag="element" type="name" name="unbound2ScoreTimer2"/>
 					</attrs>
 				</insert>
 			</find_Node>
-			<find_Node tag="controllers">
-				<insert>
-					<controller class="lesta.dialogs.battle_window_controllers.UnboundElementController" clips="unboundScoreTimer"/>
-					<attrs>
-						<do_if_not_exist tag="controller" type="clips" name="unboundScoreTimer"/>
-					</attrs>
-				</insert>
-			</find_Node>	
 		</root_Node>
 	</target_File>
-	<check name="ScoreTimer" version="1.0.0"/>
+	<check name="ScoreTimer" version="3.0.0"/>
 </code>
