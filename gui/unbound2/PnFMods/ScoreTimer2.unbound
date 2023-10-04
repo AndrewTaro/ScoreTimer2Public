@@ -101,7 +101,7 @@
 	(block
 		(style
 			(hitTest = false)
-			(bind marginTop "isWinTimeValid ? 0px : -1px")
+			(bind marginTop "isWinTimeValid ? 1px : -1px")
 			(bind marginLeft "isWinTimeValid ? 0px : 4px")
 		)
 
