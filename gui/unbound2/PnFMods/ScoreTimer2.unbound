@@ -1,0 +1,132 @@
+(def constant ST2_ELEMENT_NAME "'scoreTimer2'")
+(def constant ST2_DEFAULT_OFFSET {
+	X: 4,
+	Y: 120
+})
+(def constant ST2_SIZE {
+	X: 84px,
+	Y: 34px
+})
+
+#must be identical to PyConst
+(def constant ST2_RESULT_PREDICTION {
+	DRAW_TIME	: 1,
+	WIN_TIME	: 2,
+	WIN_SCORE	: 3,
+	LOSE_TIME	: 4,
+	LOSE_SCORE	: 5,
+
+	ALLY_WINNING: [2, 3],
+	ENEMY_WINNING: [4, 5]
+})
+
+(def element ScoreTimer2() layout=true
+	(scope
+	)
+	(block
+		#(macro trace "'mainscnere is here'")
+		(element ScoreTimer2TeamInfoItem isAlly="true")
+		(element ScoreTimer2TeamInfoItem isAlly="false")
+	)
+)
+
+(def element ScoreTimer2TeamInfoItem(isAlly:bool) layout=true
+	(scope
+		#battledata
+		(var timeToWinItemName:str = "isAlly ? 'allyTimeToWin' : 'enemyTimeToWin'")
+		(var winningStates:array = "isAlly ? ST2_RESULT_PREDICTION.ALLY_WINNING : ST2_RESULT_PREDICTION.ENEMY_WINNING")
+		(var battleDataEntity:gfx = "$datahub.getSingleEntity(CC.battleData)")
+		(var dataComponent:gfx = "battleDataEntity.data" (event "battleDataEntity.evAdded"))
+		(var scoreTimerData:dict = "dataComponent.data" (event "dataComponent.evChanged"))
+		(var resultPrediction:number = "scoreTimerData ? scoreTimerData.resultPrediction : -1")
+		(var isHighPrecision:bool = "scoreTimerData ? scoreTimerData.highPrecision : false")
+		(var winTime:number = "	scoreTimerData ? scoreTimerData[timeToWinItemName] : -1")
+		(var isWinning:bool = "isIn(resultPrediction, winningStates)")
+
+		#drag-drop
+		(macro STAGE_SIZE)
+		(var teamType:str = "isAlly ? 'Ally' : 'Enemy'")
+		(var itemName:str = "ST2_ELEMENT_NAME + teamType")
+		(var defaultPos:dict = "{'positionX': isAlly ? (stageWidth/2 - ST2_SIZE.X - ST2_DEFAULT_OFFSET.X) : (stageWidth/2 + ST2_DEFAULT_OFFSET.X), 'positionY': ST2_DEFAULT_OFFSET.Y}")
+		(macro DRAGGABLE_GET_DROP_POSITION _wndName="itemName" _defaults="defaultPos")
+	)
+
+	(block
+		#draggable
+		(element ModDraggableElement _wndName="itemName" _defaults="defaultPos")
+		(style
+			(position = "absolute")
+			(bind left "drogPosX")
+			(bind top "drogPosY")
+			(width = "ST2_SIZE.X")
+			(height = "ST2_SIZE.Y")
+		)
+		#background
+		(macro ScoreTimer2ContrastPanelItem)
+		#info
+		(hblock
+			(element ScoreTimer2StatusIconItem _isAlly="isAlly" _isWinning="isWinning")
+			(element ScoreTimer2TimerItem _isAlly="isAlly" _isWinning="isWinning" _winTime="winTime" _isHighPrecision="isHighPrecision")
+		)
+	)
+)
+
+(def element ScoreTimer2StatusIconItem(_isAlly:bool, _isWinning:bool) layout=true
+	(scope
+		(var iconTeam:str = "_isAlly	? 'ally' : 'enemy'")
+		(var iconType:str = "_isWinning ? 'filled' : 'empty'")
+		(var iconPath:str = "'url:../../PnFMods/ScoreTimerPy/scoretimer_icons/point_' + iconTeam + '_' + iconType + '.png'")
+	)
+
+	(block
+		(style
+			(width = 26)
+			(height = 26)
+			(margin = "[4px,4px,-3px,4px]")
+			(bind backgroundImage "iconPath")
+			(hitTest = false)
+		)
+	)
+)
+
+(def element ScoreTimer2TimerItem(_isAlly:bool, _isWinning:bool, _winTime:number, _isHighPrecision:bool) layout=true
+	(scope
+		(var timer:gfx = "$datahub.getSingleComponent(CC.timer)")
+		(var currentTime:number = "timer.currentTime" (event "timer.evInfrequent"))
+		(var winTime:number = "_isHighPrecision ? _winTime - currentTime : _winTime")
+		(var timerColor:number = "	_isWinning	?
+										_isAlly	? SC.Ui_styles.SERVICE_COLORS.GREEN
+												: SC.Ui_styles.SERVICE_COLORS.DARK_RED
+									: SC.Ui_styles.SERVICE_COLORS.WHITE")
+		(var isWinTimeValid:bool = "(winTime != null) && (0 <= winTime) && (winTime < 6000)")
+		(var winTimeText:str = "isWinTimeValid ? countdownFormat(winTime, 0, true) : '--:--'")
+	)
+
+	(block
+		(style
+			(hitTest = false)
+			(bind marginTop "isWinTimeValid ? 1px : -1px")
+			(bind marginLeft "isWinTimeValid ? 0px : 4px")
+		)
+
+		(tf
+			(class $TextDefaultBold)
+			(style
+				(textAlign = "left")
+				(bind textColor "timerColor")
+				(fontSize = "21")
+			)
+			(bind text "winTimeText")
+		)
+	)
+)
+
+(def macro ScoreTimer2ContrastPanelItem() layout=true
+	(mc contrast_panel
+		(class $FullsizeAbsolute)
+		(style
+			(alpha = "0.4")
+			(hitTest = false)
+		)
+	)
+)
