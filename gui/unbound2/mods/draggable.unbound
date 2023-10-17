@@ -2,9 +2,9 @@
 #THESE CODE SNIPPETS ARE ORIGINALLY WRITTEN BY AUTOSPY.
 #THIS IS JUST A WORKAROUND UNTIL AUTOSPY OFICIALLY RELEASES A DRAGGABLE-HELPER-MOD.
 
-(def constant DRAGGABLE_MIN_ELEMENT_SIZE 20)
+(def constant DRAGGABLE_MIN_ELEMENT_SIZE 40)
 
-(def element ModDraggableElement (_wndName:str, _defaults:dict) layout=true
+(def element ModDraggableElement (_wndName:str, _defaults:dict, _elmSize:dict=null) layout=true
 	(scope
 		(var evMouseDown:str = "'evMouseDown' + _wndName")
 		(var evMouseUp:str = "'evMouseUp' + _wndName")
@@ -30,8 +30,11 @@
 		(var curPosX:number = "mouseX - diffPosX")
 		(var curPosY:number = "mouseY - diffPosY")
 
-		(var stageX:number = "stageWidth  - DRAGGABLE_MIN_ELEMENT_SIZE")
-		(var stageY:number = "stageHeight - DRAGGABLE_MIN_ELEMENT_SIZE")
+		(var elementWidth:number = "_elmSize ? _elmSize.width : DRAGGABLE_MIN_ELEMENT_SIZE")
+		(var elementHeight:number = "_elmSize ? _elmSize.height : DRAGGABLE_MIN_ELEMENT_SIZE")
+
+		(var stageX:number = "stageWidth  - elementWidth")
+		(var stageY:number = "stageHeight - elementHeight")
 
 		(var clampedCurPosX:number = "min(max(curPosX, 0), stageX)")
 		(var clampedCurPosY:number = "min(max(curPosY, 0), stageY)")
