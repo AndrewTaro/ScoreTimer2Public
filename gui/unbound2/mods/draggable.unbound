@@ -37,7 +37,7 @@
 		(var clampedCurPosY:number = "min(max(curPosY, 0), stageY)")
 
 		#(dispatch "'ev' + _wndName" args = "{x: curPosX > 0 ? curPosX : 0, y: curPosY > 0 ? curPosY : 0}" dir=1 (bind enabled "__dragMouseDown && isMouseActive") (bind trigger "curPosX") (bind trigger "curPosY"))
-		(dispatch "'ev' + _wndName" args = "{x: clampedCurPosX, y: clampedCurPosY}" dir=1 (bind enabled "__dragMouseDown && isMouseActive") (bind trigger "curPosX") (bind trigger "curPosY"))
+		(dispatch "'ev' + _wndName" args = "{x: clampedCurPosX, y: clampedCurPosY}" dir=1 (bind enabled "__dragMouseDown && isMouseActive") (bind trigger "clampedCurPosX") (bind trigger "clampedCurPosY"))
 		(dispatch "'ev' + _wndName + 'IconVisibleChanged'" args = "{visible: __dragMouseDown}" dir=1 (bind trigger "__dragMouseDown"))
 	)
 
