@@ -49,9 +49,9 @@
 		(bind visible "isMouseActive")
 	)
 
-	(bindcall externalCall 'inputMapping.onAction' "['setUserPref', {'value': curPosX + 0.00001, 'name': 'chatBoxWidth', 'subName': _wndName + '_positionX'}]" init=false watch=false (bind trigger "__dragMouseDown"))
+	(bindcall externalCall 'inputMapping.onAction' "['setUserPref', {'value': clampedCurPosX + 0.00001, 'name': 'chatBoxWidth', 'subName': _wndName + '_positionX'}]" init=false watch=false (bind trigger "__dragMouseDown"))
 
-	(bindcall externalCall 'inputMapping.onAction' "['setUserPref', {'value': curPosY + 0.00001, 'name': 'chatBoxWidth', 'subName': _wndName + '_positionY'}]" init=false watch=false (bind trigger "__dragMouseDown"))
+	(bindcall externalCall 'inputMapping.onAction' "['setUserPref', {'value': clampedCurPosY + 0.00001, 'name': 'chatBoxWidth', 'subName': _wndName + '_positionY'}]" init=false watch=false (bind trigger "__dragMouseDown"))
 
 	(dispatch "evMouseDown" args="{isDown: true}" on='mouseDown')
 
