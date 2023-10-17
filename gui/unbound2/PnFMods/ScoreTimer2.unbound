@@ -53,7 +53,7 @@
 
 	(block
 		#draggable
-		(element ModDraggableElement _wndName="itemName" _defaults="defaultPos")
+		(element ModDraggableElement _wndName="itemName" _defaults="defaultPos" _elmSize="{height: ST2_SIZE.Y, width: ST2_SIZE.X}")
 		(style
 			(position = "absolute")
 			(bind left "drogPosX")
