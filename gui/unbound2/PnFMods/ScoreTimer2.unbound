@@ -76,12 +76,46 @@
 		(var iconTeam:str = "_isAlly	? 'ally' : 'enemy'")
 		(var iconType:str = "_isWinning ? 'filled' : 'empty'")
 		(var iconPath:str = "'url:../../PnFMods/ScoreTimerPy/scoretimer_icons/point_' + iconTeam + '_' + iconType + '.png'")
+
+		(event evIsWinningChanged)
+		(event evAnimationEnded)
+	)
+
+	(dispatch evIsWinningChanged (bind enabled "_isWinning") (bind trigger "_isWinning"))
+
+	(style
+		(width = 26)
+		(height = 26)		
 	)
 
 	(block
+		(controller $Animation
+			(bindcall play  duration="0.3"
+							easing="Easing.cubic_out"
+							from="{ scaleX: 1.0, scaleY: 1.0 }"
+							to=	 "{ scaleX: 4.0, scaleY: 4.0 }"
+							(event "evIsWinningChanged")
+			)
+			(dispatch evAnimationEnded on=evAnimEnded)
+		)
+
+		(controller $Animation
+			(bindcall play  duration="0.15"
+							easing="Easing.cubic_out"
+							from="{ scaleX: 4.0, scaleY: 4.0 }"
+							to=	 "{ scaleX: 1.0, scaleY: 1.0 }"
+							(event "evAnimationEnded")
+			)
+		)
+
 		(style
+			(position = "absolute")
 			(width = 26)
 			(height = 26)
+			(top = 13)
+			(left = 13)
+			(pivotX = "50%")
+			(pivotY = "50%")
 			(margin = "[4px,4px,-3px,4px]")
 			(bind backgroundImage "iconPath")
 			(hitTest = false)
