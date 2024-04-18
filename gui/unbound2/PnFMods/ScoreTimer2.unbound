@@ -39,7 +39,7 @@
 		(var dataComponent:gfx = "battleDataEntity.data" (event "battleDataEntity.evAdded"))
 		(var scoreTimerData:dict = "dataComponent.data" (event "dataComponent.evChanged"))
 		(var resultPrediction:number = "scoreTimerData ? scoreTimerData.resultPrediction : -1")
-		(var isHighPrecision:bool = "scoreTimerData ? scoreTimerData.highPrecision : false")
+		(var isHighPrecision:bool = "scoreTimerData && 'highPrecision' in scoreTimerData ? scoreTimerData.highPrecision : false")
 		(var winTime:number = "	scoreTimerData ? scoreTimerData[timeToWinItemName] : -1")
 		(var isWinning:bool = "isIn(resultPrediction, winningStates)")
 
