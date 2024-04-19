@@ -1,3 +1,4 @@
+(def constant TT_SCORETIMER_INSTALLED true) #for modconfig
 (def constant ST2_ELEMENT_NAME "'scoreTimer2'")
 (def constant ST2_DEFAULT_OFFSET {
 	X: 4,
@@ -19,6 +20,23 @@
 	ALLY_WINNING: [2, 3],
 	ENEMY_WINNING: [4, 5]
 })
+
+(def constant ST2_PREFS {
+	DISABLE_DRAGDROP			: {KEY: 'scoreTimerDisableDragDrop', 			DEFAULT: false},# Disable Drag-Drop (Lock Position)
+})
+
+(def macro ST2_GET_USERPREF()
+	(var userPrefsComponent:gfx = "$datahub.getSingleComponent(CC.userPrefs)")
+	(var userPrefsNum:gfx = "userPrefsComponent.userPrefs.chatBoxWidth" watch=false (event "userPrefsComponent.evUserPrefsChanged"))
+)
+
+(def macro ST2_GET_PREF_NUMBER (_varName:expression, _pref:expression, _offset:expression="0.0", _modifier:expression="1.0")
+	(var name="_varName" type=number value="(userPrefsNum && toString(userPrefsNum[_pref.KEY]) != null) ? _offset + (round(userPrefsNum[_pref.KEY]) * _modifier) : _pref.DEFAULT")
+)
+
+(def macro ST2_GET_PREF_BOOL (_varName:expression, _pref:expression)
+	(var name="_varName" type=bool value="(userPrefsNum && toString(userPrefsNum[_pref.KEY]) != null) ? round(userPrefsNum[_pref.KEY]) : _pref.DEFAULT")
+)
 
 (def element ScoreTimer2() layout=true
 	(scope
@@ -49,11 +67,22 @@
 		(var itemName:str = "ST2_ELEMENT_NAME + teamType")
 		(var defaultPos:dict = "{'positionX': isAlly ? (stageWidth/2 - ST2_SIZE.X - ST2_DEFAULT_OFFSET.X) : (stageWidth/2 + ST2_DEFAULT_OFFSET.X), 'positionY': ST2_DEFAULT_OFFSET.Y}")
 		(macro DRAGGABLE_GET_DROP_POSITION _wndName="itemName" _defaults="defaultPos")
+
+		#pref
+		(macro ST2_GET_USERPREF)
+		(macro ST2_GET_PREF_BOOL _varName="'isPositionLocked'"		_pref="ST2_PREFS.DISABLE_DRAGDROP")
 	)
 
 	(block
 		#draggable
-		(element ModDraggableElement _wndName="itemName" _defaults="defaultPos" _elmSize="{height: ST2_SIZE.Y, width: ST2_SIZE.X}")
+		#(element ModDraggableElement _wndName="itemName" _defaults="defaultPos" _elmSize="{height: ST2_SIZE.Y, width: ST2_SIZE.X}")
+		(controller $Instance renderer='ModDraggableElement'
+			(bind enabled "!isPositionLocked")
+			(args
+				_wndName="itemName"
+				_defaults="defaultPos"
+			)
+		)
 		(style
 			(position = "absolute")
 			(bind left "dragPosX")
