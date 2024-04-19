@@ -9,6 +9,7 @@ This mod predicts Win or Lose based on the remaining time, points, and holding c
 # Requirements
 You must install the following for this mod to work:
 - [DraggableUnbound2](../../../DraggableUnbound2)
+- [TTaro Mod Config](../../../TTaroModConfig)
 
 # Install
 1. Download a zip.
