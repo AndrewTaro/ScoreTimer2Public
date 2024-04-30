@@ -30,12 +30,12 @@
 	(var userPrefsNum:gfx = "userPrefsComponent.userPrefs.chatBoxWidth" watch=false (event "userPrefsComponent.evUserPrefsChanged"))
 )
 
-(def macro ST2_GET_PREF_NUMBER (_varName:expression, _pref:expression, _offset:expression="0.0", _modifier:expression="1.0")
-	(var name="_varName" type=number value="(userPrefsNum && toString(userPrefsNum[_pref.KEY]) != null) ? _offset + (round(userPrefsNum[_pref.KEY]) * _modifier) : _pref.DEFAULT")
+(def macro ST2_GET_PREF_NUMBER (_varName:expression, _pref:expression)
+	(var name="_varName" type=number value="userPrefsNum && isNumber(userPrefsNum[_pref.KEY]) ? _pref.OFFSET + (round(userPrefsNum[_pref.KEY]) * _pref.MODIFIER) : _pref.DEFAULT")
 )
 
 (def macro ST2_GET_PREF_BOOL (_varName:expression, _pref:expression)
-	(var name="_varName" type=bool value="(userPrefsNum && toString(userPrefsNum[_pref.KEY]) != null) ? round(userPrefsNum[_pref.KEY]) : _pref.DEFAULT")
+	(var name="_varName" type=bool value="userPrefsNum && isNumber(userPrefsNum[_pref.KEY]) ? round(userPrefsNum[_pref.KEY]) : _pref.DEFAULT")
 )
 
 (def element ScoreTimer2() layout=true
