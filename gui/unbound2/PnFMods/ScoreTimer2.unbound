@@ -21,23 +21,6 @@
 	ENEMY_WINNING: [4, 5]
 })
 
-(def constant ST2_PREFS {
-	DISABLE_DRAGDROP			: {KEY: 'scoreTimerDisableDragDrop', 			DEFAULT: false},# Disable Drag-Drop (Lock Position)
-})
-
-(def macro ST2_GET_USERPREF()
-	(var userPrefsComponent:gfx = "$datahub.getSingleComponent(CC.userPrefs)")
-	(var userPrefsNum:gfx = "userPrefsComponent.userPrefs.chatBoxWidth" watch=false (event "userPrefsComponent.evUserPrefsChanged"))
-)
-
-(def macro ST2_GET_PREF_NUMBER (_varName:expression, _pref:expression)
-	(var name="_varName" type=number value="userPrefsNum && isNumber(userPrefsNum[_pref.KEY]) ? _pref.OFFSET + (round(userPrefsNum[_pref.KEY]) * _pref.MODIFIER) : _pref.DEFAULT")
-)
-
-(def macro ST2_GET_PREF_BOOL (_varName:expression, _pref:expression)
-	(var name="_varName" type=bool value="userPrefsNum && isNumber(userPrefsNum[_pref.KEY]) ? round(userPrefsNum[_pref.KEY]) : _pref.DEFAULT")
-)
-
 (def element ScoreTimer2() layout=true
 	(scope
 	)
@@ -69,8 +52,8 @@
 		(macro DRAGGABLE_GET_DROP_POSITION _wndName="itemName" _defaults="defaultPos")
 
 		#pref
-		(macro ST2_GET_USERPREF)
-		(macro ST2_GET_PREF_BOOL _varName="'isPositionLocked'"		_pref="ST2_PREFS.DISABLE_DRAGDROP")
+		(macro TT_GET_USERPREF)
+		(macro TT_GET_PREF_BOOL _varName="'isPositionLocked'"		_pref="ST2_PREFS.DISABLE_DRAGDROP")
 	)
 
 	(block
